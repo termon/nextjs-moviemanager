@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  Id        Int       @id @default(autoincrement())
+  Title     String?
+  Director  String?
+  Year      Int
+  Duration  Int
+  Budget    Float
+  Rating    Float     @default(0)
+  PosterUrl String?
+  Genre     Int
+  Cast      String?
+  Plot      String?
+  Reviews   Review[]
+  @@map("Movies")
+}
+
+model Review {
+  Id      Int     @id @default(autoincrement())
+  Name    String?
+  Comment String?
+  On      String
+  Rating  Int
+  MovieId Int
+  Movie  Movie  @relation(fields: [MovieId], references: [Id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("Reviews")
+  @@index([MovieId], map: "IX_Reviews_MovieId")
+}
+
+model User {
+  Id                Int     @id @default(autoincrement())
+  Name              String?
+  Email             String?
+  Password          String?
+  Role              Int
+  Token             String?
+  ResetPasswordCode String?
+  ConfirmEmailCode  String?
+  @@map("Users")
+}
+
